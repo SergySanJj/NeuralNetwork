@@ -4,12 +4,14 @@
 
 Neuron::Neuron()
 {
-	this->data = 0;
+	this->data = 0.0f;
+	
 }
 
 
 Neuron::~Neuron()
 {
+	this->edges.clear();
 }
 
 void Neuron::setInput(float input)
@@ -19,13 +21,20 @@ void Neuron::setInput(float input)
 
 void Neuron::activate()
 {
+	for (auto it = this->edges.begin(); it != this->edges.end(); it++)
+	{
+		(*it).son->increase((*it).weight * this->data);
+		//(*it).son->data += (*it).weight * this->data;
+	}
 }
 
-void Neuron::increase(float value)
+inline void Neuron::increase(float value)
 {
+	this->data += value;
 }
 
-float Neuron::activationFunction(float * f(float))
+float Neuron::activationFunction(floatFunc f)
 {
-	return 0.0f;
+	this->data = f(this->data);
+	return this->data;
 }
