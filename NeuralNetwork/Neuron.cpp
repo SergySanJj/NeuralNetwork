@@ -1,13 +1,9 @@
 #include "Neuron.h"
 
-
-
 Neuron::Neuron()
 {
 	this->data = 0.0f;
-	
 }
-
 
 Neuron::~Neuron()
 {
