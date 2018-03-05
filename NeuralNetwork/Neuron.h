@@ -1,16 +1,11 @@
 #pragma once
 #include <vector>
-#include <math.h>
+#include <cmath>
 
-#define e 2.71828
+#define e 2.71828f
 typedef float(*floatFunc)(float);
 
 class Neuron;
-
-float standartActivationFunction(float x)
-{
-	return (1 / (1 + pow(e, -x)));
-}
 
 struct TEdge
 {
@@ -27,16 +22,17 @@ public:
 	void setInput(float input);
 	void activate();
 	inline void increase(float value);
-	float activationFunction(floatFunc f);
-	void createLink(Neuron connectWith)
+	float activateFunction();
+	void createLink(Neuron &connectWith)
 	{
 		TEdge *newEdge = new TEdge();
 		newEdge->son = &connectWith;
 		newEdge->weight = 0.0f;
-		this->edges.push_back(*newEdge);
+		this->edges.push_back(newEdge);
 	}
-
+	float standartActivationFunction(float x);
 private:
 	float data = 0.0f;
-	std::vector<TEdge> edges;
+	std::vector< TEdge* > edges;
+	float (Neuron::*activationFunction)(float) = &Neuron::standartActivationFunction;
 };

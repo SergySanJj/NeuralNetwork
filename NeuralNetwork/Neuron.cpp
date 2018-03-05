@@ -17,10 +17,9 @@ void Neuron::setInput(float input)
 
 void Neuron::activate()
 {
-	for (auto it = this->edges.begin(); it != this->edges.end(); it++)
+	for (auto it = this->edges.begin(); it != this->edges.end(); ++it)
 	{
-		(*it).son->increase((*it).weight * this->data);
-		//(*it).son->data += (*it).weight * this->data;
+		(*it)->son->increase(((*it)->weight) * (this->data));
 	}
 }
 
@@ -29,8 +28,13 @@ inline void Neuron::increase(float value)
 	this->data += value;
 }
 
-float Neuron::activationFunction(floatFunc f)
+float Neuron::activateFunction()
 {
-	this->data = f(this->data);
+	this->data = (this->*activationFunction)(this->data);
 	return this->data;
+}
+
+float Neuron::standartActivationFunction(float x)
+{
+	return (1.0f / (1.0f + float(pow(e, -x))));
 }
