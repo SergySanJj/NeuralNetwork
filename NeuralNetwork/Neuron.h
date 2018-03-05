@@ -28,12 +28,12 @@ public:
 	void activate();
 	inline void increase(float value);
 	float activationFunction(floatFunc f);
-	void createLink(Neuron *connectWith)
+	void createLink(Neuron connectWith)
 	{
 		TEdge *newEdge = new TEdge();
-		newEdge->son = connectWith;
+		newEdge->son = &connectWith;
 		newEdge->weight = 0.0f;
-		this->edges.push_back(newEdge);
+		this->edges.push_back(*newEdge);
 	}
 
 private:

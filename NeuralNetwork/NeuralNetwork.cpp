@@ -29,7 +29,7 @@ void Layer::linkWithLayer(Layer * linkWith)
 	{
 		for (auto layer2 = linkWith->neurons->begin(); layer2 != linkWith->neurons->end(); layer2++)
 		{
-			(*layer1).createLink(layer2);
+			(*layer1).createLink(*layer2);
 		}
 	}
 }
