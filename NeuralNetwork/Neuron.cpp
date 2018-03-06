@@ -57,4 +57,3 @@ float Neuron::getData()
 {
 	return (this->data);
 }
-

@@ -15,10 +15,12 @@ struct Layer
 private:
 	vector<Neuron> *neurons = nullptr;
 	string id = "";
-	float(*activationFunction)(float);
 	unsigned int size = 0;
+	wstring pathToLayer = L"";
+
+	float(*activationFunction)(float);
+
 public:
-	
 
 	Layer(int n, string id);
 
@@ -29,7 +31,8 @@ public:
 	void setActivationFunction(float(*f)(float));
 	void activateFunction();
 	float getNeuronData(unsigned int n);
-	void setLayerData(float mas[]);
+	template <size_t N>
+	bool setLayerData(float(&mas)[N]);
 	void linkWithLayer(Layer *linkWith);
 };
 
@@ -38,13 +41,45 @@ public:
 class NeuralNetwork
 {
 public:
-	NeuralNetwork();
+	NeuralNetwork(const string &name);
 	~NeuralNetwork();
 
 	void addLayer(unsigned int neuronQuantity, const string &layerID);
 	bool connectLayers(const string &ID1, const string &ID2);
-
+	template <size_t N>
+	bool setLayerData(float(&mas)[N], const string &ID);
 private:
-	inline bool checkLayerExist(const string &ID);
 	unordered_map<string, Layer*> layers; // key, point to the layer of nodes
+	string networkName = "a";
+
+	inline bool checkLayerExist(const string &ID);
 };
+
+template<size_t N>
+bool NeuralNetwork::setLayerData(float(&mas)[N], const string &ID)
+{
+	if (checkLayerExist(ID))
+	{
+		(*(this->layers.find(ID))).second->setLayerData(mas);
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+template <size_t N>
+bool Layer::setLayerData(float(&mas)[N])
+{
+	if (N < this->size)
+		return 0;
+	else
+	{
+		for (auto it = this->neurons->begin(); it != this->neurons->end(); ++it)
+		{
+			(*it).setInput(mas[distance(this->neurons->begin(), it)]);
+		}
+		return 1;
+	}
+}

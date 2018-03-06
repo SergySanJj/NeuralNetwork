@@ -110,10 +110,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="Neuron.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="Neuron.cpp" />

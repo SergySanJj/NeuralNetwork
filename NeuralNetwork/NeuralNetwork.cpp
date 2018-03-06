@@ -5,12 +5,16 @@ float sigmoidFunction(float x)    // standart Activation Function
 	return (1.0f / (1.0f + float(pow(e, -x))));
 }
 
-NeuralNetwork::NeuralNetwork()
+NeuralNetwork::NeuralNetwork(const string &name) :networkName(name)
 {
 }
 
 NeuralNetwork::~NeuralNetwork()
 {
+	for (auto it = this->layers.begin(); it != this->layers.end(); it++)
+	{
+		delete (*it).second;
+	}
 }
 
 void NeuralNetwork::addLayer(unsigned int neuronQuantity, const string &layerID)
@@ -72,7 +76,6 @@ void Layer::setActivationFunction(float(*f)(float))
 	for (auto it = this->neurons->begin(); it != this->neurons->end(); ++it)
 	{
 		(*it).setActivationFunction(f);
-
 	}
 }
 
@@ -88,19 +91,10 @@ float Layer::getNeuronData(unsigned int n)
 {
 	if (n < this->size)
 	{
-		
 		return (this->neurons->at(n).getData());
 	}
 	else
 		return 0.0f;
-}
-
-void Layer::setLayerData(float mas[])
-{
-	for (auto it = this->neurons->begin(); it != this->neurons->end(); ++it)
-	{
-		(*it).setInput(mas[distance(this->neurons->begin(), it)]);
-	}
 }
 
 void Layer::linkWithLayer(Layer * linkWith)
