@@ -3,9 +3,10 @@
 #include <cmath>
 
 #define e 2.71828f
-typedef float(*floatFunc)(float);
 
 class Neuron;
+
+
 
 struct TEdge
 {
@@ -23,16 +24,11 @@ public:
 	void activate();
 	inline void increase(float value);
 	float activateFunction();
-	void createLink(Neuron &connectWith)
-	{
-		TEdge *newEdge = new TEdge();
-		newEdge->son = &connectWith;
-		newEdge->weight = 0.0f;
-		this->edges.push_back(newEdge);
-	}
-	float standartActivationFunction(float x);
+	void setActivationFunction(float(*f)(float));
+	void createLink(Neuron &connectWith);
+	float getData();
 private:
 	float data = 0.0f;
 	std::vector< TEdge* > edges;
-	float (Neuron::*activationFunction)(float) = &Neuron::standartActivationFunction;
+	float(*activationFunction)(float);
 };

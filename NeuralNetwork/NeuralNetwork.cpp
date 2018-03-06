@@ -1,5 +1,10 @@
 #include "NeuralNetwork.h"
 
+float sigmoidFunction(float x)    // standart Activation Function
+{
+	return (1.0f / (1.0f + float(pow(e, -x))));
+}
+
 NeuralNetwork::NeuralNetwork()
 {
 }
@@ -8,46 +13,94 @@ NeuralNetwork::~NeuralNetwork()
 {
 }
 
-void NeuralNetwork::addLayer(unsigned int neuronQuantity, string layerID)
+void NeuralNetwork::addLayer(unsigned int neuronQuantity, const string &layerID)
 {
-
-		Layer * newLayer = new Layer(neuronQuantity, layerID);
-		if (this->layers.find(layerID) == this->layers.cend())
-		{
-			this->layers.insert(layerPair(layerID, newLayer));
-		}
-		else
-			throw ID_ALREADY_EXISTS; // DO SOMETHING
-
-
-}
-
-bool NeuralNetwork::connectLayers(string ID1, string ID2)
-{
-	if (this->layers.find(ID1) != this->layers.cend() && this->layers.find(ID2) != this->layers.cend())
+	if (this->layers.find(layerID) == this->layers.cend())
 	{
-		//(*(this->layers.find(ID1))).second.linkWithLayer((*this->layers.find(ID2)).second);
-		
+		Layer * newLayer = new Layer(neuronQuantity, layerID);
+		this->layers.insert(layerPair(layerID, newLayer));
 	}
-
-	return false;
+	else
+		throw ID_ALREADY_EXISTS; // DO SOMETHING
 }
 
-Layer::Layer(int n, string id)
+bool NeuralNetwork::connectLayers(const string &ID1, const string &ID2)
 {
+	if (checkLayerExist(ID1) && checkLayerExist(ID2))
+	{
+		(*(this->layers.find(ID1))).second->linkWithLayer((*(this->layers.find(ID2))).second);
+		return 1;
+	}
+	else
+		return 0;
+}
+
+inline bool NeuralNetwork::checkLayerExist(const string & ID)
+{
+	if (this->layers.find(ID) != this->layers.cend())
+	{
+		return 1;
+	}
+	return 0;
+}
+
+Layer::Layer(int n, string id) :id(id), size(n)
+{
+	this->activationFunction = &sigmoidFunction;
 	this->neurons = new vector<Neuron>(n);
-	this->id = id;
-	this->size = n;
+	//this->size = n;
 }
 
 Layer::~Layer()
 {
 	delete this->neurons;
+	this->neurons = nullptr;
 }
 
 string Layer::getID()
 {
 	return this->id;
+}
+
+unsigned int Layer::getSize()
+{
+	return (this->size);
+}
+
+void Layer::setActivationFunction(float(*f)(float))
+{
+	for (auto it = this->neurons->begin(); it != this->neurons->end(); ++it)
+	{
+		(*it).setActivationFunction(f);
+
+	}
+}
+
+void Layer::activateFunction()
+{
+	for (auto it = this->neurons->begin(); it != this->neurons->end(); ++it)
+	{
+		(*it).activateFunction();
+	}
+}
+
+float Layer::getNeuronData(unsigned int n)
+{
+	if (n < this->size)
+	{
+		
+		return (this->neurons->at(n).getData());
+	}
+	else
+		return 0.0f;
+}
+
+void Layer::setLayerData(float mas[])
+{
+	for (auto it = this->neurons->begin(); it != this->neurons->end(); ++it)
+	{
+		(*it).setInput(mas[distance(this->neurons->begin(), it)]);
+	}
 }
 
 void Layer::linkWithLayer(Layer * linkWith)
