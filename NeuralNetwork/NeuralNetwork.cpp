@@ -37,6 +37,8 @@ bool NeuralNetwork::connectLayers(const string &ID1, const string &ID2)
 	if (checkLayerExist(ID1) && checkLayerExist(ID2))
 	{
 		(*(this->layers.find(ID1))).second->linkWithLayer((*(this->layers.find(ID2))).second);
+		wstring pathToWeights = (*(this->layers.find(ID1))).second->getPath();
+
 		return 1;
 	}
 	else
@@ -63,6 +65,11 @@ Layer::~Layer()
 {
 	delete this->neurons;
 	this->neurons = nullptr;
+}
+
+wstring Layer::getPath()
+{
+	return this->pathToLayer;
 }
 
 void Layer::setPath(const wstring &path)

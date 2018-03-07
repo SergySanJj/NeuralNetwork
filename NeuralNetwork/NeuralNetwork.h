@@ -28,6 +28,7 @@ public:
 
 	~Layer();
 
+	wstring getPath();
 	void setPath(const wstring &path);
 	void setNetworkName(const string &name);
 	string getID();
