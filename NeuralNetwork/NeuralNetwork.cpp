@@ -7,6 +7,8 @@ float sigmoidFunction(float x)    // standart Activation Function
 
 NeuralNetwork::NeuralNetwork(const string &name) :networkName(name)
 {
+
+	this->fs.organizeNetwork(name);
 }
 
 NeuralNetwork::~NeuralNetwork()
@@ -22,10 +24,12 @@ void NeuralNetwork::addLayer(unsigned int neuronQuantity, const string &layerID)
 	if (this->layers.find(layerID) == this->layers.cend())
 	{
 		Layer * newLayer = new Layer(neuronQuantity, layerID);
+		newLayer->setNetworkName(this->networkName);
 		this->layers.insert(layerPair(layerID, newLayer));
+		newLayer->setPath(this->fs.organizeLayer(this->networkName, layerID));
 	}
 	else
-		throw ID_ALREADY_EXISTS; // DO SOMETHING
+		throw ID_ALREADY_EXISTS; // DO SOMETHING or write catch in wrapper for network class
 }
 
 bool NeuralNetwork::connectLayers(const string &ID1, const string &ID2)
@@ -59,6 +63,16 @@ Layer::~Layer()
 {
 	delete this->neurons;
 	this->neurons = nullptr;
+}
+
+void Layer::setPath(const wstring &path)
+{
+	this->pathToLayer = move(path);
+}
+
+void Layer::setNetworkName(const string &name)
+{
+	this->networkName = move(name);
 }
 
 string Layer::getID()

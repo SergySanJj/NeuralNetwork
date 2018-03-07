@@ -15,13 +15,14 @@ public:
 	~FileSystem();
 
 	wstring getCurDir();
-	void organizeLayer(const string &networkName, const string &layerID);
+	wstring organizeLayer(const string &networkName, const string &layerID); // returns path to layer dir
+	void organizeNetwork(const string &networkName);
 private:
 	wstring currentPath = L""; // path to .exe file
 	wstring networkPath = L""; // path to network dir
 
-	void createNetworkDir(wstring name);
-	void createLayerDir(wstring name);
+	void createNetworkDir(const wstring &name);
+	wstring createLayerDir(const wstring &name); // returns path to layer dir
 	int StringToWString(std::wstring &ws, const std::string &s);
 	wstring strToWstr(const string &s);
 };

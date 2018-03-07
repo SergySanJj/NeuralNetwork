@@ -18,27 +18,33 @@ wstring FileSystem::getCurDir()
 	return (this->currentPath);
 }
 
-void FileSystem::organizeLayer(const string & networkName, const string & layerID)
+wstring FileSystem::organizeLayer(const string & networkName, const string & layerID)
+{
+	//createNetworkDir(strToWstr(networkName));
+	return createLayerDir(strToWstr(layerID));
+}
+
+void FileSystem::organizeNetwork(const string & networkName)
 {
 	createNetworkDir(strToWstr(networkName));
 }
 
-void FileSystem::createNetworkDir(wstring name)
+void FileSystem::createNetworkDir(const wstring &name)
 {
 	wstring path = this->currentPath;
 	path.append(L"\\");
 	path.append(name);
 	CreateDirectoryW(path.c_str(), NULL);
-	this->networkPath = path;
+	this->networkPath = move(path); // start string was const so we don't need to c_str(), also we can not do copy and just use move()
 }
 
-void FileSystem::createLayerDir(wstring name)
+wstring FileSystem::createLayerDir(const wstring &name)
 {
 	wstring path = this->networkPath;
 	path.append(L"\\");
 	path.append(name);
 	CreateDirectoryW(path.c_str(), NULL);
-	this->networkPath = path;
+	return path;
 }
 
 int FileSystem::StringToWString(std::wstring & ws, const std::string & s)

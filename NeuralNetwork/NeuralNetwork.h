@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include <iterator>
+#include "FileSystem.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ private:
 	string id = "";
 	unsigned int size = 0;
 	wstring pathToLayer = L"";
+	string networkName = "";
 
 	float(*activationFunction)(float);
 
@@ -26,6 +28,8 @@ public:
 
 	~Layer();
 
+	void setPath(const wstring &path);
+	void setNetworkName(const string &name);
 	string getID();
 	unsigned int getSize();
 	void setActivationFunction(float(*f)(float));
@@ -51,6 +55,7 @@ public:
 private:
 	unordered_map<string, Layer*> layers; // key, point to the layer of nodes
 	string networkName = "a";
+	FileSystem fs;
 
 	inline bool checkLayerExist(const string &ID);
 };
